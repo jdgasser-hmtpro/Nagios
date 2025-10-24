@@ -1,6 +1,7 @@
-FROM ubuntu:24.04
+FROM FROM debian:bullseye
 MAINTAINER Jean-Daniel Gasser <jdgasser@gmail.com>
 
+ENV DEBIAN_FRONTEND=noninteractive
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
 ENV NAGIOS_GROUP           nagios
@@ -30,7 +31,6 @@ RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set
     echo "postfix postfix/mynetworks string '127.0.0.0/8'" | debconf-set-selections && \
     echo "postfix postfix/mailname string ${NAGIOS_FQDN}" | debconf-set-selections
 
-# Installe les paquets nécessaires
 RUN apt-get update && \
     apt-get install -y \
         apache2 \
@@ -47,51 +47,8 @@ RUN apt-get update && \
         gperf \
         iputils-ping \
         jq \
-        libapache2-mod-php                  \
-        libcache-memcached-perl             \
-        libcgi-pm-perl                      \
-        libcrypt-des-perl                   \
-        libcrypt-rijndael-perl              \
-        libdbd-mysql-perl                   \
-        libdbd-pg-perl                      \
-        libdbi-dev                          \
-        libdbi-perl                         \
-        libdigest-hmac-perl                 \
-        libfreeradius-dev                   \
-        libgd-gd2-perl                      \
-        libjson-perl                        \
-        libldap2-dev                        \
-        libmonitoring-plugin-perl           \
-        libmysqlclient-dev                  \
-        libnagios-object-perl               \
-        libnet-snmp-perl                    \
-        libnet-tftp-perl                    \
-        libnet-xmpp-perl                    \
-        libpq-dev                           \
-        libredis-perl                       \
-        librrds-perl                        \
-        libssl-dev                          \
-        libswitch-perl                      \
-        libwww-perl                         \
-        m4                                  \
-        netcat                              \
-        parallel                            \
-        php-cli                             \
-        php-gd                              \
-        postfix                             \
-        python3-pip                         \
-        python3-nagiosplugin                \
-        rsync                               \
-        rsyslog                             \
-        runit                               \
-        smbclient                           \
-        snmp                                \
-        snmpd                               \
-        snmp-mibs-downloader                \
-        unzip                               \
-        python3                              \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN ( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )                         && \
     ( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
