@@ -1,5 +1,5 @@
-FROM ubuntu:20.04
-MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
+FROM ubuntu:24.04
+MAINTAINER Jean-Daniel Gasser <jdgasser@gmail.com>
 
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
@@ -17,11 +17,11 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.7
-ENV NAGIOS_PLUGINS_BRANCH  release-2.4.0
-ENV NRPE_BRANCH            nrpe-4.0.3
-ENV NCPA_BRANCH            v2.4.0
-ENV NSCA_BRANCH            nsca-2.10.2
+ENV NAGIOS_BRANCH          nagios-4.5.9
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.12
+ENV NRPE_BRANCH            nrpe-4.1.3
+ENV NCPA_BRANCH            v3.2.1
+ENV NSCA_BRANCH            nsca-2.10.3
 ENV NAGIOSTV_VERSION       0.8.5
 
 
@@ -296,4 +296,10 @@ EXPOSE 80 5667
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
-CMD [ "/usr/local/bin/start_nagios" ]
+#CMD [ "/usr/local/bin/start_nagios" ]
+
+#VOLUME "/opt/nagios/var" "/opt/nagios/etc" "/opt/nagios/libexec" "/var/log/apache2" "/usr/share/snmp/mibs" "/opt/Custom-Nagios-Plugins"
+COPY update_hosts.sh /usr/local/bin/
+COPY update_ssh.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/update_*
+CMD [ "bash", "-c", "/usr/local/bin/update_hosts.sh && /usr/local/bin/update_ssh.sh && /usr/local/bin/start_nagios" ]
