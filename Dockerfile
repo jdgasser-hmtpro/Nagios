@@ -33,20 +33,9 @@ RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set
 
 RUN apt-get update && \
     apt-get install -y \
-        apache2 \
-        apache2-utils \
-        autoconf \
-        automake \
-        bc \
-        bsd-mailx \
-        build-essential \
-        dnsutils \
-        fping \
-        gettext \
-        git \
-        gperf \
-        iputils-ping \
-        jq \
+        libapache2-mod-php \
+        php-cli \
+        php-gd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
