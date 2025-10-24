@@ -1,4 +1,4 @@
-FROM  debian:bullseye
+FROM ubuntu:24.04
 MAINTAINER Jean-Daniel Gasser <jdgasser@gmail.com>
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -18,99 +18,83 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.5.9
+ENV NAGIOS_BRANCH          nagios-4.5.7
 ENV NAGIOS_PLUGINS_BRANCH  release-2.4.12
-ENV NRPE_BRANCH            nrpe-4.1.3
-ENV NCPA_BRANCH            v3.2.1
-ENV NSCA_BRANCH            nsca-2.10.3
-ENV NAGIOSTV_VERSION       0.8.5
+ENV NRPE_BRANCH            nrpe-4.1.1
+ENV NCPA_BRANCH            v3.1.1
+ENV NSCA_BRANCH            nsca-2.10.2
+ENV NAGIOSTV_VERSION       0.9.2
 
 
-# Configure Postfix pour "Internet Site" (remplace "mondomaine.com" par ton domaine)
-RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
-    echo "postfix postfix/mynetworks string '127.0.0.0/8'" | debconf-set-selections && \
-    echo "postfix postfix/mailname string mondomaine.com" | debconf-set-selections && \
-    echo "postfix postfix/destinations string mondomaine.com, localhost.localdomain, localhost" | debconf-set-selections
-
-# Installe Postfix
-RUN apt-get update && \
-    apt-get install -y postfix && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Active les dépôts non-free et contrib
-RUN sed -i 's|main|main contrib non-free|g' /etc/apt/sources.list
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Installe les paquets de base
-RUN apt-get update && \
-    apt-get install -y \
-        apache2 \
-        apache2-utils \
-        autoconf \
-        automake \
-        bc \
-        bsd-mailx \
-        build-essential \
-        dnsutils \
-        fping \
-        gettext \
-        git \
-        gperf \
-        iputils-ping \
-        jq \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/
-
-# Installe les paquets PHP
-RUN apt-get update && \
-    apt-get install -y \
-        libapache2-mod-php \
-        php-cli \
-        php-gd \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/
-
-# Installe les paquets Perl
-RUN apt-get update && \
-    apt-get install -y \
-        libcgi-pm-perl \
-        libcrypt-des-perl \
-        libdbd-mysql-perl \
-        libdbd-pg-perl \
-        libdbi-perl \
-        libdigest-hmac-perl \
-        libgd-perl \
-        libjson-perl \
-        libnet-snmp-perl \
-        libnet-tftp-perl \
-        libredis-perl \
-        librrds-perl \
-        libssl-dev \
-        libswitch-perl \
-        libwww-perl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/
-
-# Installe les autres paquets
-RUN apt-get update && \
-    apt-get install -y \
-    #    libldap2-dev \
-     #   libmysqlclient-dev \
-        libpq-dev \
-        m4 \
-        netcat \
-        parallel \
-        python3 \
-     #   python3-pip \
-        python3-nagiosplugin \
-        rsync \
-        rsyslog \
-     #   smbclient \
-        unzip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/
+RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
+    echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections            && \
+    echo postfix postfix/mailname string ${NAGIOS_FQDN} | debconf-set-selections             && \
+    apt-get update && apt-get install -y    \
+        apache2                             \
+        apache2-utils                       \
+        autoconf                            \
+        automake                            \
+        bc                                  \
+        bsd-mailx                           \
+        build-essential                     \
+        dnsutils                            \
+        fping                               \
+        gettext                             \
+        git                                 \
+        gperf                               \
+        iputils-ping                        \
+        jq                                  \
+        libapache2-mod-php                  \
+        libcache-memcached-perl             \
+        libcgi-pm-perl                      \
+        libcrypt-des-perl                   \
+        libcrypt-rijndael-perl              \
+        libcrypt-x509-perl                  \
+        libdbd-mysql-perl                   \
+        libdbd-pg-perl                      \
+        libdbi-dev                          \
+        libdbi-perl                         \
+        libdigest-hmac-perl                 \
+        libfreeradius-dev                   \
+        libgdchart-gd2-xpm-dev              \
+        libgd-gd2-perl                      \
+        libjson-perl                        \
+        libldap2-dev                        \
+        libmonitoring-plugin-perl           \
+        libmariadb-dev                      \
+        libnagios-object-perl               \
+        libnet-snmp-perl                    \
+        libnet-snmp-perl                    \
+        libnet-tftp-perl                    \
+        libnet-xmpp-perl                    \
+        libpq-dev                           \
+        libradsec-dev                       \
+        libredis-perl                       \
+        librrds-perl                        \
+        libssl-dev                          \
+        libswitch-perl                      \
+        libtext-glob-perl                   \
+        libwww-perl                         \
+        m4                                  \
+        netcat-traditional                  \
+        parallel                            \
+        php-cli                             \
+        php-gd                              \
+        postfix                             \
+        python3                             \
+        python3-venv                        \
+        python3-pip                         \
+        python3-nagiosplugin                \
+        rsync                               \
+        rsyslog                             \
+        runit                               \
+        smbclient                           \
+        snmp                                \
+        snmpd                               \
+        snmp-mibs-downloader                \
+        unzip                               \
+                                                && \
+    apt-get clean && rm -Rf /var/lib/apt/lists/*
 
 RUN ( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )                         && \
     ( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
@@ -147,7 +131,6 @@ RUN cd /tmp                                                                     
     make clean                                                                       && \
     cd /tmp && rm -Rf nagioscore
 
-
 RUN cd /tmp                                                                                   && \
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
     cd nagios-plugins                                                                         && \
@@ -181,7 +164,27 @@ RUN cd /tmp                                                          && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi && \
     cd /tmp && rm -Rf nagiosgraph
 
-
+RUN cd /opt                                                                         && \
+    pip install --break-system-packages pymssql paho-mqtt                           && \
+    git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
+    git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  && \
+    git clone https://github.com/justintime/nagios-plugins.git   JE-Nagios-Plugins  && \
+    git clone https://github.com/nagiosenterprises/check_mssql_collection.git   nagios-mssql  && \
+    git clone https://github.com/jpmens/check-mqtt.git           jpmens-mqtt        && \
+    git clone https://github.com/danfruehauf/nagios-plugins.git  DF-Nagios-Plugins  && \
+    chmod +x /opt/WL-Nagios-Plugins/check*                                          && \
+    chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                          && \
+    chmod +x /opt/jpmens-mqtt/check-mqtt.py                                         && \
+    chmod +x /opt/DF-Nagios-Plugins/check_sql/check_sql                             && \
+    chmod +x /opt/DF-Nagios-Plugins/check_jenkins/check_jenkins                     && \
+    chmod +x /opt/DF-Nagios-Plugins/check_vpn/check_vpn                             && \
+    cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl ${NAGIOS_HOME}/libexec/        && \
+    cp /opt/nagios-mssql/check_mssql_database.py ${NAGIOS_HOME}/libexec/            && \
+    cp /opt/nagios-mssql/check_mssql_server.py ${NAGIOS_HOME}/libexec/              && \
+    cp /opt/jpmens-mqtt/check-mqtt.py ${NAGIOS_HOME}/libexec/                       && \
+    cp /opt/DF-Nagios-Plugins/check_sql/check_sql ${NAGIOS_HOME}/libexec/           && \
+    cp /opt/DF-Nagios-Plugins/check_jenkins/check_jenkins ${NAGIOS_HOME}/libexec/   && \
+    cp /opt/DF-Nagios-Plugins/check_vpn/check_vpn ${NAGIOS_HOME}/libexec/
 
 RUN cd /tmp && \
     wget https://github.com/chriscareycode/nagiostv-react/releases/download/v${NAGIOSTV_VERSION}/nagiostv-${NAGIOSTV_VERSION}.tar.gz && \
@@ -223,8 +226,12 @@ RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
 RUN mkdir -p /orig/var                     && \
     mkdir -p /orig/etc                     && \
+    mkdir -p /orig/graph-etc                     && \
+    mkdir -p /orig/graph-var                     && \
     cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
-    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ 
+    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ && \
+    cp -Rp /opt/nagiosgraph/etc/* /orig/graph-etc && \
+    cp -Rp /opt/nagiosgraph/var/* /orig/graph-var
 
 ## Set the permissions for example config
 RUN find /opt/nagios/etc \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' + && \
@@ -249,7 +256,10 @@ RUN cd /opt/nagiosgraph/etc && \
 RUN rm /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
 
 # enable all runit services
-RUN ln -s /etc/sv/* /etc/service
+RUN ln -sf /etc/sv/* /etc/service
+
+# fix ping permissions for nagios user
+RUN chmod u+s /usr/bin/ping
 
 ENV APACHE_LOCK_DIR /var/run
 ENV APACHE_LOG_DIR /var/log/apache2
@@ -264,9 +274,6 @@ EXPOSE 80 5667
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
-#CMD [ "/usr/local/bin/start_nagios" ]
-
-#VOLUME "/opt/nagios/var" "/opt/nagios/etc" "/opt/nagios/libexec" "/var/log/apache2" "/usr/share/snmp/mibs" "/opt/Custom-Nagios-Plugins"
 COPY update_hosts.sh /usr/local/bin/
 COPY update_ssh.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/update_*
