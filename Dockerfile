@@ -6,7 +6,7 @@ ENV NAGIOS_USER            nagios
 ENV NAGIOS_GROUP           nagios
 ENV NAGIOS_CMDUSER         nagios
 ENV NAGIOS_CMDGROUP        nagios
-ENV NAGIOS_FQDN            nagios.example.com
+ENV NAGIOS_FQDN            nagios.hmt-pro.com
 ENV NAGIOSADMIN_USER       nagiosadmin
 ENV NAGIOSADMIN_PASS       nagios
 ENV APACHE_RUN_USER        nagios
@@ -25,24 +25,28 @@ ENV NSCA_BRANCH            nsca-2.10.3
 ENV NAGIOSTV_VERSION       0.8.5
 
 
-RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
-    echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections            && \
-    echo postfix postfix/mailname string ${NAGIOS_FQDN} | debconf-set-selections             && \
-    apt-get update && apt-get install -y    \
-        apache2                             \
-        apache2-utils                       \
-        autoconf                            \
-        automake                            \
-        bc                                  \
-        bsd-mailx                           \
-        build-essential                     \
-        dnsutils                            \
-        fping                               \
-        gettext                             \
-        git                                 \
-        gperf                               \
-        iputils-ping                        \
-        jq                                  \
+# Configure postfix sans interaction
+RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
+    echo "postfix postfix/mynetworks string '127.0.0.0/8'" | debconf-set-selections && \
+    echo "postfix postfix/mailname string ${NAGIOS_FQDN}" | debconf-set-selections
+
+# Installe les paquets nécessaires
+RUN apt-get update && \
+    apt-get install -y \
+        apache2 \
+        apache2-utils \
+        autoconf \
+        automake \
+        bc \
+        bsd-mailx \
+        build-essential \
+        dnsutils \
+        fping \
+        gettext \
+        git \
+        gperf \
+        iputils-ping \
+        jq \
         libapache2-mod-php                  \
         libcache-memcached-perl             \
         libcgi-pm-perl                      \
@@ -86,8 +90,8 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmp-mibs-downloader                \
         unzip                               \
         python3                              \
-                                                && \
-    apt-get clean && rm -Rf /var/lib/apt/lists/*
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*
 
 RUN ( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )                         && \
     ( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
