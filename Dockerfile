@@ -26,11 +26,17 @@ ENV NSCA_BRANCH            nsca-2.10.3
 ENV NAGIOSTV_VERSION       0.8.5
 
 
-# Configure Postfix pour éviter les prompts interactifs
+# Configure Postfix pour "Internet Site" (remplace "mondomaine.com" par ton domaine)
 RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
     echo "postfix postfix/mynetworks string '127.0.0.0/8'" | debconf-set-selections && \
-    echo "postfix postfix/mailname string `hostname`" | debconf-set-selections && \
-    echo "postfix postfix/destinations string localhost" | debconf-set-selections
+    echo "postfix postfix/mailname string mondomaine.com" | debconf-set-selections && \
+    echo "postfix postfix/destinations string mondomaine.com, localhost.localdomain, localhost" | debconf-set-selections
+
+# Installe Postfix
+RUN apt-get update && \
+    apt-get install -y postfix && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Active les dépôts non-free et contrib
 RUN sed -i 's|main|main contrib non-free|g' /etc/apt/sources.list
@@ -96,7 +102,6 @@ RUN apt-get update && \
         m4 \
         netcat \
         parallel \
-        postfix \
         python3 \
         python3-pip \
         python3-nagiosplugin \
