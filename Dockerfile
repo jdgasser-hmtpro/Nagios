@@ -193,5 +193,6 @@ ENV APACHE_LOG_DIR /var/log/apache2
 EXPOSE 80
 
 VOLUME "/opt/nagios/var" "/opt/nagios/etc" "/opt/nagios/libexec" "/var/log/apache2" "/usr/share/snmp/mibs" "/opt/Custom-Nagios-Plugins"
-
-CMD [ "/usr/local/bin/start_nagios" ]
+COPY update_hosts.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/update_hosts.sh
+CMD [ "bash", "-c", "/usr/local/bin/update_hosts.sh && /usr/local/bin/start_nagios" ]
