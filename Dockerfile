@@ -1,17 +1,17 @@
 FROM ubuntu:24.04
-MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
+MAINTAINER Jean-Daniel Gasser <jdgasser@gmail.com>
 
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
 ENV NAGIOS_GROUP           nagios
 ENV NAGIOS_CMDUSER         nagios
 ENV NAGIOS_CMDGROUP        nagios
-ENV NAGIOS_FQDN            nagios.example.com
+ENV NAGIOS_FQDN            nagios.hmt-pro.com
 ENV NAGIOSADMIN_USER       nagiosadmin
 ENV NAGIOSADMIN_PASS       nagios
 ENV APACHE_RUN_USER        nagios
 ENV APACHE_RUN_GROUP       nagios
-ENV NAGIOS_TIMEZONE        UTC
+ENV NAGIOS_TIMEZONE        UTC+1
 ENV DEBIAN_FRONTEND        noninteractive
 ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
@@ -303,4 +303,7 @@ EXPOSE 80 5667
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
-CMD [ "/usr/local/bin/start_nagios" ]
+COPY update_hosts.sh /usr/local/bin/
+COPY update_ssh.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/update_*
+CMD [ "bash", "-c", "/usr/local/bin/update_hosts.sh && /usr/local/bin/update_ssh.sh && /usr/local/bin/start_nagios" ]
