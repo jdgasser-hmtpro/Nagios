@@ -78,6 +78,7 @@ RUN apt-get update && \
         libcgi-pm-perl \
         libcrypt-des-perl \
         libdbd-mysql-perl \
+        libdbd-pg-perl \
         libdbi-perl \
         libdigest-hmac-perl \
         libgd-perl \
@@ -95,21 +96,18 @@ RUN apt-get update && \
 # Installe les autres paquets
 RUN apt-get update && \
     apt-get install -y \
-        libdbd-pg-perl \
-        libldap2-dev \
-        libmysqlclient-dev \
+    #    libldap2-dev \
+     #   libmysqlclient-dev \
         libpq-dev \
         m4 \
         netcat \
         parallel \
         python3 \
-        python3-pip \
+     #   python3-pip \
         python3-nagiosplugin \
         rsync \
         rsyslog \
-        smbclient \
-        snmp \
-        snmpd \
+     #   smbclient \
         unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/
