@@ -63,6 +63,7 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libnet-tftp-perl					\
 		libredis-perl						\
 		libcrypt-x509-perl					\
+		libwww-perl							\
 		libswitch-perl					&&	\
 		apt-get clean
 
