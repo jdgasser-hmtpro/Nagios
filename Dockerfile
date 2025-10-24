@@ -1,4 +1,4 @@
-FROM FROM debian:bullseye
+FROM  debian:bullseye
 MAINTAINER Jean-Daniel Gasser <jdgasser@gmail.com>
 
 ENV DEBIAN_FRONTEND=noninteractive
