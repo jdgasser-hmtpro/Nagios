@@ -181,27 +181,7 @@ RUN cd /tmp                                                          && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi && \
     cd /tmp && rm -Rf nagiosgraph
 
-RUN cd /opt                                                                         && \
-    pip install pymssql paho-mqtt pymssql                                           && \
-    git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
-    git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  && \
-    git clone https://github.com/justintime/nagios-plugins.git   JE-Nagios-Plugins  && \
-    git clone https://github.com/nagiosenterprises/check_mssql_collection.git   nagios-mssql  && \
-    git clone https://github.com/jpmens/check-mqtt.git           jpmens-mqtt        && \
-    git clone https://github.com/danfruehauf/nagios-plugins.git  DF-Nagios-Plugins  && \
-    chmod +x /opt/WL-Nagios-Plugins/check*                                          && \
-    chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                          && \
-    chmod +x /opt/jpmens-mqtt/check-mqtt.py                                         && \
-    chmod +x /opt/DF-Nagios-Plugins/check_sql/check_sql                             && \
-    chmod +x /opt/DF-Nagios-Plugins/check_jenkins/check_jenkins                     && \
-    chmod +x /opt/DF-Nagios-Plugins/check_vpn/check_vpn                             && \
-    cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl ${NAGIOS_HOME}/libexec/        && \
-    cp /opt/nagios-mssql/check_mssql_database.py ${NAGIOS_HOME}/libexec/            && \
-    cp /opt/nagios-mssql/check_mssql_server.py ${NAGIOS_HOME}/libexec/              && \
-    cp /opt/jpmens-mqtt/check-mqtt.py ${NAGIOS_HOME}/libexec/                       && \
-    cp /opt/DF-Nagios-Plugins/check_sql/check_sql ${NAGIOS_HOME}/libexec/           && \
-    cp /opt/DF-Nagios-Plugins/check_jenkins/check_jenkins ${NAGIOS_HOME}/libexec/   && \
-    cp /opt/DF-Nagios-Plugins/check_vpn/check_vpn ${NAGIOS_HOME}/libexec/
+
 
 RUN cd /tmp && \
     wget https://github.com/chriscareycode/nagiostv-react/releases/download/v${NAGIOSTV_VERSION}/nagiostv-${NAGIOSTV_VERSION}.tar.gz && \
