@@ -31,13 +31,83 @@ RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set
     echo "postfix postfix/mynetworks string '127.0.0.0/8'" | debconf-set-selections && \
     echo "postfix postfix/mailname string ${NAGIOS_FQDN}" | debconf-set-selections
 
+# Active les dépôts non-free et contrib
+RUN sed -i 's|main|main contrib non-free|g' /etc/apt/sources.list
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Installe les paquets de base
+RUN apt-get update && \
+    apt-get install -y \
+        apache2 \
+        apache2-utils \
+        autoconf \
+        automake \
+        bc \
+        bsd-mailx \
+        build-essential \
+        dnsutils \
+        fping \
+        gettext \
+        git \
+        gperf \
+        iputils-ping \
+        jq \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/
+
+# Installe les paquets PHP
 RUN apt-get update && \
     apt-get install -y \
         libapache2-mod-php \
         php-cli \
         php-gd \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/
+
+# Installe les paquets Perl
+RUN apt-get update && \
+    apt-get install -y \
+        libcgi-pm-perl \
+        libcrypt-des-perl \
+        libdbd-mysql-perl \
+        libdbi-perl \
+        libdigest-hmac-perl \
+        libgd-perl \
+        libjson-perl \
+        libnet-snmp-perl \
+        libnet-tftp-perl \
+        libredis-perl \
+        librrds-perl \
+        libssl-dev \
+        libswitch-perl \
+        libwww-perl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/
+
+# Installe les autres paquets
+RUN apt-get update && \
+    apt-get install -y \
+        libdbd-pg-perl \
+        libldap2-dev \
+        libmysqlclient-dev \
+        libpq-dev \
+        m4 \
+        netcat \
+        parallel \
+        postfix \
+        python3 \
+        python3-pip \
+        python3-nagiosplugin \
+        rsync \
+        rsyslog \
+        smbclient \
+        snmp \
+        snmpd \
+        snmp-mibs-downloader \
+        unzip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/
 
 RUN ( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )                         && \
     ( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
