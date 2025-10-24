@@ -110,7 +110,6 @@ RUN apt-get update && \
         smbclient \
         snmp \
         snmpd \
-        snmp-mibs-downloader \
         unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/
