@@ -26,10 +26,11 @@ ENV NSCA_BRANCH            nsca-2.10.3
 ENV NAGIOSTV_VERSION       0.8.5
 
 
-# Configure postfix sans interaction
+# Configure Postfix pour éviter les prompts interactifs
 RUN echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
     echo "postfix postfix/mynetworks string '127.0.0.0/8'" | debconf-set-selections && \
-    echo "postfix postfix/mailname string ${NAGIOS_FQDN}" | debconf-set-selections
+    echo "postfix postfix/mailname string `hostname`" | debconf-set-selections && \
+    echo "postfix postfix/destinations string localhost" | debconf-set-selections
 
 # Active les dépôts non-free et contrib
 RUN sed -i 's|main|main contrib non-free|g' /etc/apt/sources.list
