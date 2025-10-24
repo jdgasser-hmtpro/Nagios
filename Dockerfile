@@ -1,6 +1,7 @@
 FROM ubuntu:24.04
 MAINTAINER Jean-Daniel Gasser <jdgasser@gmail.com>
 
+ENV DEBIAN_FRONTEND=noninteractive
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
 ENV NAGIOS_GROUP           nagios
@@ -149,36 +150,6 @@ RUN cd /tmp                                                                     
     chmod u+s ${NAGIOS_HOME}/libexec/check_icmp                                               && \
     cd /tmp && rm -Rf nagios-plugins                                                          
 
-RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/${NCPA_BRANCH}/client/check_ncpa.py  && \
-    chmod +x ${NAGIOS_HOME}/libexec/check_ncpa.py
-
-RUN cd /tmp                                                                  && \
-    git clone https://github.com/NagiosEnterprises/nrpe.git -b $NRPE_BRANCH  && \
-    cd nrpe                                                                  && \
-    ./configure                                   \
-        --with-ssl=/usr/bin/openssl               \
-        --with-ssl-lib=/usr/lib/x86_64-linux-gnu  \
-                                                                             && \
-    make check_nrpe                                                          && \
-    cp src/check_nrpe ${NAGIOS_HOME}/libexec/                                && \
-    make clean                                                               && \
-    cd /tmp && rm -Rf nrpe
-
-RUN cd /tmp                                                 && \
-    git clone https://github.com/NagiosEnterprises/nsca.git && \
-    cd nsca                                                 && \
-    git checkout $NSCA_TAG                                  && \
-    ./configure                                                \
-        --prefix=${NAGIOS_HOME}                                \
-        --with-nsca-user=${NAGIOS_USER}                        \
-        --with-nsca-grp=${NAGIOS_GROUP}                     && \
-    make all                                                && \
-    cp src/nsca ${NAGIOS_HOME}/bin/                         && \
-    cp src/send_nsca ${NAGIOS_HOME}/bin/                    && \
-    cp sample-config/nsca.cfg ${NAGIOS_HOME}/etc/           && \
-    cp sample-config/send_nsca.cfg ${NAGIOS_HOME}/etc/      && \
-    sed -i 's/^#server_address.*/server_address=0.0.0.0/'  ${NAGIOS_HOME}/etc/nsca.cfg && \
-    cd /tmp && rm -Rf nsca
 
 RUN cd /tmp                                                          && \
     git clone https://git.code.sf.net/p/nagiosgraph/git nagiosgraph  && \
