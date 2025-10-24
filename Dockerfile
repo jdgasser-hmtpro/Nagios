@@ -194,5 +194,6 @@ EXPOSE 80
 
 VOLUME "/opt/nagios/var" "/opt/nagios/etc" "/opt/nagios/libexec" "/var/log/apache2" "/usr/share/snmp/mibs" "/opt/Custom-Nagios-Plugins"
 COPY update_hosts.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/update_hosts.sh
-CMD [ "bash", "-c", "/usr/local/bin/update_hosts.sh && /usr/local/bin/start_nagios" ]
+COPY update_ssh.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/update_*
+CMD [ "bash", "-c", "/usr/local/bin/update_hosts.sh && /usr/local/bin/update_ssh.sh && /usr/local/bin/start_nagios" ]
