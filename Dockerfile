@@ -11,7 +11,7 @@ ENV NAGIOSADMIN_USER       nagiosadmin
 ENV NAGIOSADMIN_PASS       nagios
 ENV APACHE_RUN_USER        nagios
 ENV APACHE_RUN_GROUP       nagios
-ENV NAGIOS_TIMEZONE        UTC
+ENV NAGIOS_TIMEZONE        UTC+1
 ENV DEBIAN_FRONTEND        noninteractive
 ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
@@ -54,7 +54,6 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libdbi-perl                         \
         libdigest-hmac-perl                 \
         libfreeradius-dev                   \
-        libgdchart-gd2-xpm-dev              \
         libgd-gd2-perl                      \
         libjson-perl                        \
         libldap2-dev                        \
@@ -62,11 +61,9 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libmysqlclient-dev                  \
         libnagios-object-perl               \
         libnet-snmp-perl                    \
-        libnet-snmp-perl                    \
         libnet-tftp-perl                    \
         libnet-xmpp-perl                    \
         libpq-dev                           \
-        libradsec-dev                       \
         libredis-perl                       \
         librrds-perl                        \
         libssl-dev                          \
@@ -88,7 +85,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmpd                               \
         snmp-mibs-downloader                \
         unzip                               \
-        python                              \
+        python3                              \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
 
