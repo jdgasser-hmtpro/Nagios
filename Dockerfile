@@ -278,4 +278,5 @@ COPY update_hosts.sh /usr/local/bin/
 COPY update_ssh.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/update_*
 RUN echo "Europe/Paris" > /etc/timezone
+
 CMD [ "bash", "-c", "/usr/local/bin/update_hosts.sh && /usr/local/bin/update_ssh.sh && /usr/local/bin/start_nagios" ]
