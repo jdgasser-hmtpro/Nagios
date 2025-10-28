@@ -20,7 +20,7 @@ ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
 ENV NAGIOS_BRANCH          nagios-4.5.9
 ENV NAGIOS_PLUGINS_BRANCH  release-2.4.12
-ENV NRPE_BRANCH            nrpe-4.1.1
+ENV NRPE_BRANCH            nrpe-4.1.3
 ENV NCPA_BRANCH            v3.1.1
 ENV NSCA_BRANCH            nsca-2.10.2
 ENV NAGIOSTV_VERSION       0.9.2
@@ -149,6 +149,18 @@ RUN cd /tmp                                                                     
     chown root:root ${NAGIOS_HOME}/libexec/check_icmp                                         && \
     chmod u+s ${NAGIOS_HOME}/libexec/check_icmp                                               && \
     cd /tmp && rm -Rf nagios-plugins                                                          
+
+RUN cd /tmp                                                                  && \
+    git clone https://github.com/NagiosEnterprises/nrpe.git -b $NRPE_BRANCH  && \
+    cd nrpe                                                                  && \
+    ./configure                                   \
+        --with-ssl=/usr/bin/openssl               \
+        --with-ssl-lib=/usr/lib/x86_64-linux-gnu  \
+                                                                             && \
+    make check_nrpe                                                          && \
+    cp src/check_nrpe ${NAGIOS_HOME}/libexec/                                && \
+    make clean                                                               && \
+    cd /tmp && rm -Rf nrpe
 
 
 RUN cd /tmp                                                          && \
