@@ -18,3 +18,5 @@ chmod 600 /opt/nagios/.ssh/id_rsa
 chmod 600 /opt/nagios/.ssh/id_rsa.pub
 chmod 600 /opt/nagios/.ssh/known_hosts
 chown -R nagios:nagios /opt/nagios/.ssh
+su - nagios -c 'ssh backup "exit"'
+su - nagios -c 'ssh jd@ns3.hmt-pro.com "exit"'
