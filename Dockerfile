@@ -26,7 +26,8 @@ ENV NSCA_BRANCH            nsca-2.10.2
 ENV NAGIOSTV_VERSION       0.9.2
 
 
-RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
+RUN echo ${NAGIOS_FQDN} > /etc/hostname
+    echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
     echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections            && \
     echo postfix postfix/mailname string ${NAGIOS_FQDN} | debconf-set-selections             && \
     apt-get update && apt-get install -y    \
