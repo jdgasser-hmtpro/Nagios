@@ -134,12 +134,15 @@ RUN cd /tmp                                                                     
 RUN cd /tmp                                                                                   && \
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b ${NAGIOS_PLUGINS_BRANCH} && \
     cd nagios-plugins                                                                         && \
-    sed -i \
+        sed -i \
     -e 's/SSLv3_client_method()/TLS_client_method()/' \
     -e 's/TLSv1_client_method()/TLS_client_method()/' \
     -e 's/TLSv1_1_client_method()/TLS_client_method()/' \
     -e 's/TLSv1_2_client_method()/TLS_client_method()/' \
-    plugins/sslutils.c                                                                        && \
+    -e 's/tm->type/ASN1_STRING_type(tm)/g' \
+    -e 's/tm->length/ASN1_STRING_length(tm)/g' \
+    -e 's/tm->data\[/ASN1_STRING_get0_data(tm)[/g' \
+    plugins/sslutils.c                                                              && \
     ./tools/setup                                                                             && \
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
