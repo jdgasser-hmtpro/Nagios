@@ -58,7 +58,6 @@ RUN echo ${NAGIOS_FQDN} > /etc/hostname && \
         libdbi-perl                         \
         libdigest-hmac-perl                 \
         libfreeradius-dev                   \
-        libgdchart-gd2-xpm-dev              \
         libgd-gd2-perl                      \
         libjson-perl                        \
         libldap2-dev                        \
@@ -70,7 +69,6 @@ RUN echo ${NAGIOS_FQDN} > /etc/hostname && \
         libnet-tftp-perl                    \
         libnet-xmpp-perl                    \
         libpq-dev                           \
-        libradsec-dev                       \
         libredis-perl                       \
         librrds-perl                        \
         libssl-dev                          \
@@ -97,7 +95,7 @@ RUN echo ${NAGIOS_FQDN} > /etc/hostname && \
         unzip                               \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
-
+RUN cpan Chart::Gdchart   # seulement si réellement requis
 RUN ( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )                         && \
     ( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
 RUN ( id -u $NAGIOS_USER    || useradd --system -d $NAGIOS_HOME -g $NAGIOS_GROUP    $NAGIOS_USER    )  && \
