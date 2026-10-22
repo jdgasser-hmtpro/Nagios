@@ -229,8 +229,8 @@ RUN mkdir -p -m 0755 /usr/share/snmp/mibs                     && \
 
 RUN sed -i 's,/bin/mail,/usr/bin/mail,' ${NAGIOS_HOME}/etc/objects/commands.cfg  && \
     sed -i 's,/usr/usr,/usr,'           ${NAGIOS_HOME}/etc/objects/commands.cfg
-
-RUN cp /etc/services /var/spool/postfix/etc/  && \
+RUN mkdir -p /var/spool/postfix/etc && \
+    cp /etc/services /var/spool/postfix/etc/ && \
     echo "smtp_address_preference = ipv4" >> /etc/postfix/main.cf
 
 RUN rm -rf /etc/rsyslog.d /etc/rsyslog.conf
