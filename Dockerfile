@@ -19,7 +19,7 @@ ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
 ENV NAGIOS_BRANCH          nagios-4.5.14
-ENV NAGIOS_PLUGINS_BRANCH  release-2.4.3
+ENV NAGIOS_PLUGINS_BRANCH  master 
 ENV NRPE_BRANCH            nrpe-4.1.3
 ENV NCPA_BRANCH            v3.1.1
 ENV NSCA_BRANCH            nsca-2.10.2
@@ -134,6 +134,12 @@ RUN cd /tmp                                                                     
 RUN cd /tmp                                                                                   && \
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b ${NAGIOS_PLUGINS_BRANCH} && \
     cd nagios-plugins                                                                         && \
+    sed -i \
+    -e 's/SSLv3_client_method()/TLS_client_method()/' \
+    -e 's/TLSv1_client_method()/TLS_client_method()/' \
+    -e 's/TLSv1_1_client_method()/TLS_client_method()/' \
+    -e 's/TLSv1_2_client_method()/TLS_client_method()/' \
+    plugins/sslutils.c                                                                        && \
     ./tools/setup                                                                             && \
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
