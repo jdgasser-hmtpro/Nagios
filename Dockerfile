@@ -132,12 +132,11 @@ RUN cd /tmp                                                                     
     cd /tmp && rm -Rf nagioscore
 
 RUN cd /tmp                                                                                   && \
-    git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
+    git clone https://github.com/nagios-plugins/nagios-plugins.git                            && \
     cd nagios-plugins                                                                         && \
     ./tools/setup                                                                             && \
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
-        --with-ipv6                                             \
         --with-ping-command="/usr/bin/ping -n -U -W %d -c %d %s"  \
         --with-ping6-command="/usr/bin/ping -6 -n -U -W %d -c %d %s"  \
                                                                                               && \
