@@ -19,7 +19,7 @@ ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
 ENV NAGIOS_BRANCH          nagios-4.5.14
-ENV NAGIOS_PLUGINS_BRANCH  master
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.3
 ENV NRPE_BRANCH            nrpe-4.1.3
 ENV NCPA_BRANCH            v3.1.1
 ENV NSCA_BRANCH            nsca-2.10.2
@@ -132,7 +132,7 @@ RUN cd /tmp                                                                     
     cd /tmp && rm -Rf nagioscore
 
 RUN cd /tmp                                                                                   && \
-    git clone https://github.com/nagios-plugins/nagios-plugins.git                            && \
+    git clone https://github.com/nagios-plugins/nagios-plugins.git -b ${NAGIOS_PLUGINS_BRANCH} && \
     cd nagios-plugins                                                                         && \
     ./tools/setup                                                                             && \
     ./configure                                                 \
